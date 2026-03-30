@@ -50,7 +50,7 @@ class TestActionInterruption:
 
     def test_interrupt_active_action_returns_true(self):
         """Interrupting an active action should return True."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=10.0)
         action.start()
 
@@ -62,7 +62,7 @@ class TestActionInterruption:
 
     def test_interrupt_inactive_action_returns_false(self):
         """Interrupting a non-active action should return False."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=10.0)
 
         assert action.state is ActionState.PENDING
@@ -88,7 +88,7 @@ class TestActionInterruption:
 
     def test_interrupt_non_interruptible_action_returns_false(self):
         """Interrupting a non-interruptible action should fail."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=10.0, interruptible=False)
         action.start()
 
@@ -100,7 +100,7 @@ class TestActionInterruption:
 
     def test_interrupt_clears_agent_reference(self):
         """Interrupting an action should clear agent.current_action."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=10.0)
         action.start()
         agent.current_action = action
@@ -111,7 +111,7 @@ class TestActionInterruption:
 
     def test_interrupt_cancels_scheduled_event(self):
         """Interrupting should cancel the scheduled completion event."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=10.0)
         action.start()
 
@@ -126,7 +126,7 @@ class TestActionResumption:
 
     def test_resumable_action_after_interrupt(self):
         """A recently interrupted action should be resumable."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=10.0)
         action.start()
         action.interrupt()
@@ -136,7 +136,7 @@ class TestActionResumption:
 
     def test_non_resumable_action_when_completed(self):
         """A completed action should not be resumable."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=10.0)
         action.start()
         action._do_complete()
@@ -146,7 +146,7 @@ class TestActionResumption:
 
     def test_resume_calls_on_resume_not_on_start(self):
         """Resuming an action should call on_resume."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=10.0)
         action.start()
 
@@ -179,7 +179,7 @@ class TestActionResumption:
 
     def test_resume_invalid_state_raises_error(self):
         """Resuming an action not in PENDING or INTERRUPTED state should raise."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=10.0)
         action.start()
         action._do_complete()
@@ -194,7 +194,7 @@ class TestActionCancel:
 
     def test_cancel_non_interruptible_action_succeeds(self):
         """Canceling should work even on non-interruptible actions."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=10.0, interruptible=False)
         action.start()
 
@@ -220,7 +220,7 @@ class TestActionCancel:
 
     def test_cancel_inactive_action_returns_false(self):
         """Canceling a non-active action should return False."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=10.0)
 
         success = action.cancel()
@@ -234,7 +234,7 @@ class TestActionProgressTracking:
 
     def test_progress_starts_at_zero(self):
         """A new action should have progress 0.0."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=10.0)
 
         assert action.progress == 0.0
@@ -284,7 +284,7 @@ class TestActionEdgeCases:
 
     def test_instantaneous_action_completes_immediately(self):
         """An action with duration 0 should complete immediately."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=0.0)
         action.start()
 
@@ -293,7 +293,7 @@ class TestActionEdgeCases:
 
     def test_action_with_callable_duration(self):
         """Actions should support dynamic duration via callable."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
 
         def get_duration(agent):
             return 15.0
@@ -305,7 +305,7 @@ class TestActionEdgeCases:
 
     def test_action_with_callable_priority(self):
         """Actions should support dynamic priority via callable."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
 
         def get_priority(agent):
             return 3.0
@@ -317,7 +317,7 @@ class TestActionEdgeCases:
 
     def test_negative_duration_raises_error(self):
         """Creating an action with negative duration should raise."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=-5.0)
 
         with pytest.raises(ValueError, match="Action duration must be >= 0"):
@@ -325,7 +325,7 @@ class TestActionEdgeCases:
 
     def test_repr_format(self):
         """Action.__repr__ should include state, progress, and duration."""
-        model, agent = make_model_and_agent()
+        _model, agent = make_model_and_agent()
         action = TrackedAction(agent, duration=10.0)
         action.start()
 
